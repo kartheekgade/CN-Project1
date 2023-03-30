@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.util.zip.DataFormatException;
 
 public class Server {
     private static final int sPort = 8000;    //The server will be listening on this port number
@@ -21,7 +22,7 @@ public class Server {
     }
 
     private static class Handler extends Thread {
-        ServerSocket sSocket;   //serversocket used to lisen on port number 8000
+       // ServerSocket sSocket;   //serversocket used to lisen on port number 8000
         Socket connection = null; //socket for the connection with the client
         String message;    //message received from the client
         String MESSAGE;    //uppercase message send to the client
@@ -100,17 +101,25 @@ public class Server {
 
 
                     }
-                } catch (Exception e) {
+                }
+                catch (IOException ioException) {
+                    System.err.println(" Closed Client" + no);
+                }
+                catch (Exception e) {
+
                     System.err.println("Data received in unknown format");
                 }
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } finally {
+            }
+            catch(Exception e){
+                System.err.println(" Closed Client" + no);
+            }
+            finally {
                 //Close connections
                 try {
                     in.close();
                     out.close();
-                    sSocket.close();
+                 //   sSocket.close();
+                    connection.close();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
